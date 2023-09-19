@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<h1>5. Geolocation, notification, media</h1>
+
+<dvi class="container">
+  <div class="chat-container">
+    <div class="chat-content">
+
+      <div class="post">
+        <div class="post-date">15.03.19 08:40</div>
+        <div class="post-content">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus quos deleniti error ipsam et quis nesciunt ab. Iste animi dignissimos, dolorem doloremque voluptatum rerum eligendi provident nam iure. Aperiam, culpa?</div>
+        <div class="post-coords">[51.50851, -0.12572]</div>
+      </div>
+
+    </div>
+    <form class="chat-input">
+      <video class="video-recorder" muted></video>
+      <div class="input-container">
+        <input class="chat-message" placeholder="Type your message here"/>
+        <div class="new-poste-buttons-container audio-video">
+          <button class="button audio-button" type="button"></button>
+          <button class="button video-button" type="button"></button>      
+        </div>
+        <div class="new-poste-buttons-container record-buttons">
+          <button class="button ok-button" type="button"></button>
+          <div class="timer">00:00</div>
+          <button class="button cancel-button" type="button"></button>      
+        </div>
+
+      </div>
+    </form>
+  </div>
+</dvi>
+
+<div class="modalBackground coords-form-modal">
+  <div class="modalActive">      
+      <div class="modalWindow">
+        <div class="form-title">
+          <div class="coord-form-title">Что-то пошло не так.</div>
+          <div class="coord-form-description">
+            К сожалению, нам не удалось определить ваше местоположение, пожалуйста, дайте разрешение на использование геолокации, либо введите координаты вручную
+          </div>
+        </div>
+        <form class="request-coords-form">
+          <label class="coords-form-label" for="coords">Широта и долгота через запятую</label>
+          <input name="coords" type="text" class="coords-input">
+          <div class="coords-form-buttons">
+            <button class="button-coords coords-form-ok-button">OK</button>
+            <button type="reset" class="button-coords coords-form-cancel-button">Отмена</button>
+            
+          </div>
+        </form>
+      </div>
+  </div>
+</div>
+
+<div class="modalBackground media-unavailable">
+  <div class="modalActive">      
+      <div class="modalWindow">
+        <div class="form-title">
+          <div class="coord-form-title">Что-то пошло не так.</div>
+          <div class="coord-form-description">
+            Медиа-устройство недоступно. Если устройство подключено и работает, предоставьте права для доступа к устройству, либо используйте другой браузер.
+          </div>
+        </div>
+        <button class="close-warning">ОК</button>
+       
+      </div>
+  </div>
+</div>
+
+</body>
+</html>
+<!-- // "start": "webpack serve --config webpack.dev.js", -->
