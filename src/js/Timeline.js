@@ -29,8 +29,8 @@ export default class Timeline {
     this.videoButton.addEventListener('click', this.videoHandler);
 
     document.querySelector('.coords-form-cancel-button').addEventListener('click', () => {
-        this.tooltipFactory.removePopover(document.querySelector('.coords-input'));  
-        this.closeRequestCoordsForm(document.querySelector('.request-coords-form'));
+      this.tooltipFactory.removePopover(document.querySelector('.coords-input'));
+      this.closeRequestCoordsForm(document.querySelector('.request-coords-form'));
     });
 
     document.querySelector('.close-warning').addEventListener('click', () => {
