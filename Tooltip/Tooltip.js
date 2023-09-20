@@ -24,17 +24,15 @@ export default class Tooltip {
     popover.style.left = `${left + elem.offsetWidth / 2 - popover.offsetWidth / 2}px`;
     popover.style.top = `${top - popover.offsetHeight - 10}px`;
 
-    elem.classList.add('border-red')
-
-    
+    elem.classList.add('border-red');
   }
 
   removePopover(elem) {
     const popover = this._popovers.find((pop) => pop.elem === elem);
-    if(popover){
-      popover.popover.remove();  
-      this._popovers = this._popovers.filter((pop) => pop.elem !== elem);  
-      elem.classList.remove('border-red')
+    if (popover) {
+      popover.popover.remove();
+      this._popovers = this._popovers.filter((pop) => pop.elem !== elem);
+      elem.classList.remove('border-red');
     }
   }
 

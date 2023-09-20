@@ -1,4 +1,4 @@
-name: CSS-Animation
+name: MEDIA
 
 on: [push, pull_request]
 

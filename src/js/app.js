@@ -1,4 +1,4 @@
-import Timeline from "./Timeline";
+import Timeline from './Timeline';
 
-const timeline= new Timeline(document.querySelector('.container'))
-timeline.init()
+const timeline = new Timeline(document.querySelector('.container'));
+timeline.init();
