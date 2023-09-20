@@ -9,7 +9,8 @@ export default class Timeline {
         this.audioButton = container.querySelector('.audio-button')
         this.videoButton = container.querySelector('.video-button')
         this.videoRecorder = container.querySelector('.video-recorder')
-        this.finishVideoRecord = container.querySelector('.ok-button')
+        this.finishRecordButton = container.querySelector('.ok-button')
+        this.cancelRecordButton = container.querySelector('.cancel-button')
         this.tooltipFactory = new Tooltip()
         this.timer = container.querySelector('.timer')
         this.timerInterval = undefined
@@ -21,6 +22,8 @@ export default class Timeline {
         this.videoHandler = this.videoHandler.bind(this)
         this.getCoords = this.getCoords.bind(this)
         this.coordsFormHandler = this.coordsFormHandler.bind(this)
+        this.finishRecordCallback = this.finishRecordCallback.bind(this)
+        this.cancelRecordCallback = this.cancelRecordCallback.bind(this)
     }
 
     init(){
@@ -156,10 +159,49 @@ export default class Timeline {
         return `${dayOfMonth}.${month}.${year} ${hour}:${minutes}`;
     }
 
-    audioHandler(event){
+    async audioHandler(event){
+        let stream = null
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({
+                audio:true            
+            })
+        }
+        catch (err){
+            console.log(err)
+            this.showMediaUnavailableWarning()
+            return
+        } 
         this.toggleRecordButtons()
+        this.renderAudioPost(stream)
         //ToDo
 
+    }
+
+    renderAudioPost(stream){
+        const recorder = new MediaRecorder(stream);
+        const chunks = [];
+
+        recorder.addEventListener("dataavailable", (event) => {
+            chunks.push(event.data);
+        });
+
+        recorder.addEventListener("stop", () => {
+            const blob = new Blob(chunks);
+
+            const newPost = this.renderPost('', Date.now())
+
+            const audioContent = document.createElement('audio')
+            videoContent.setAttribute('controls', 'controls')
+            videoContent.classList.add('post-audio-content')
+            videoContent.src = URL.createObjectURL(blob);
+
+            newPost.querySelector('.post-content').appendChild(audioContent)
+            this.toggleRecordButtons()
+            this.finishRecordButton.removeEventListener("click", this.finishRecordCallback)
+        });
+
+        recorder.start();
+        this.finishRecordButton.addEventListener("click", this.finishRecordCallback);
     }
 
     toggleRecordButtons(){
@@ -198,40 +240,62 @@ export default class Timeline {
             console.log(this)
             this.videoRecorder.play()
         })
-        
+
+        this.renderVideoPost(stream)     
+    }
+
+    renderVideoPost(stream){
         const recorder = new MediaRecorder(stream);
         const chunks = [];
-
-        recorder.addEventListener("start", () => {
-            console.log("start");
-        });
 
         recorder.addEventListener("dataavailable", (event) => {
             chunks.push(event.data);
         });
 
         recorder.addEventListener("stop", () => {
-            const blob = new Blob(chunks);
-
-            const newPost = this.renderPost('', Date.now())
-
-            const videoContent = document.createElement('video')
-            videoContent.setAttribute('controls', 'controls')
-            videoContent.classList.add('post-video-content')
-            videoContent.src = URL.createObjectURL(blob);
-
-            newPost.querySelector('.post-content').appendChild(videoContent)
+            if(this.stopRequester === 'finish'){
+                const blob = new Blob(chunks);
+    
+                const newPost = this.renderPost('', Date.now())
+    
+                const videoContent = document.createElement('video')
+                videoContent.setAttribute('controls', 'controls')
+                videoContent.classList.add('post-video-content')
+                videoContent.src = URL.createObjectURL(blob);
+    
+                newPost.querySelector('.post-content').appendChild(videoContent)
+            }
             this.toggleVideoRecorder()
+            this.finishRecordButton.removeEventListener("click", this.finishRecordCallback)
+            this.cancelRecordButton.removeEventListener("click", this.cancelRecordCallback);
         });
 
         recorder.start();
-
-        this.finishVideoRecord.addEventListener("click", () => {
-            recorder.stop();
-            stream.getTracks().forEach((track) => track.stop());
-        });
+        
+        this.finishRecordButton.addEventListener("click", this.finishRecordCallback);
+        this.cancelRecordButton.addEventListener("click", this.cancelRecordCallback);
 
     }
+
+    finishRecordCallback(){
+        this.stopRequester = 'finish'
+        this.stopRecording()
+        // recorder.stop();
+        // stream.getTracks().forEach((track) => track.stop());
+    }
+
+    cancelRecordCallback(){
+        this.stopRecording()
+        // recorder.stop();
+        // stream.getTracks().forEach((track) => track.stop());
+    }
+
+    stopRecording(){
+        recorder.stop();
+        stream.getTracks().forEach((track) => track.stop());
+    }
+
+
 
     showMediaUnavailableWarning(){
         document.querySelector('.media-unavailable').classList.add('show')
